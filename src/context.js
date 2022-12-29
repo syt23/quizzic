@@ -116,6 +116,7 @@ const AppProvider = ({ children }) => {
         setLoading(false);
         setError(false);
         setAnswered(false);
+        setCorrent(0);
         setStatus("progress");
         setQuiz({
           ...quiz,
@@ -139,6 +140,7 @@ const AppProvider = ({ children }) => {
         const index = oldIndex + 1;
         if (index > questions.length - 1) {
           setStatus("end");
+          openModal();
           return 0;
         } else {
           return index;
@@ -156,12 +158,11 @@ const AppProvider = ({ children }) => {
       setCorrent((oldState) => oldState + 1);
     }
     setAnswered(true);
-    console.log(answered);
     // nextQuestion();
   };
 
   const closeModal = () => {
-    setCorrent(0);
+    setStatus("start");
     setIsModalOpen(false);
   };
 
