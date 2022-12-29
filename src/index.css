@@ -1,13 +1,109 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+.quiz-container {
+  background-color: #f2f5fa;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.quiz {
+  min-width: 500px;
+  max-width: 80%;
+  background-color: white;
+  padding: 2rem;
+  border-radius: 5px;
+}
+
+.next-question-btn,
+.start-btn,
+.answer-btn,
+.close-btn {
+  padding: 0.25rem 0.5rem;
+  display: block;
+  width: 100%;
+  margin-top: 1rem;
+  margin-right: auto;
+  margin-left: auto;
+  text-align: center;
+}
+
+.app-title {
+  text-transform: uppercase;
+  letter-spacing: 8px;
+  font-size: 16px;
+  color: rgb(179, 179, 179);
+}
+
+.answer-btn {
+  max-width: 500px;
+}
+
+.next-question-btn {
+  max-width: 200px;
+  margin-right: 1rem;
+}
+
+.error {
+  color: darkred;
+  text-transform: capitalize;
+}
+
+.spinner {
+  margin-top: 300px;
+}
+
+.spinner-border {
+  width: 6rem;
+  height: 6rem;
+}
+
+.modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.3s linear;
+  z-index: -1;
+}
+
+.isOpen {
+  opacity: 1;
+  z-index: 999;
+}
+
+.modal-content {
+  background: white;
+  width: 90vw;
+  max-width: 670px;
+  padding: 3rem;
+  border-radius: 0.25rem;
+  text-align: center;
+  position: relative;
+}
+
+.modal-content p {
+  font-size: 1.5rem;
+  text-transform: none;
 }
