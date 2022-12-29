@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/quizzic/static/css/main.ebd08dc3.css",
+    "main.js": "/quizzic/static/js/main.a6c3f9b1.js",
+    "static/js/787.4a73ed1a.chunk.js": "/quizzic/static/js/787.4a73ed1a.chunk.js",
+    "index.html": "/quizzic/index.html",
+    "static/media/1-1.csv": "/quizzic/static/media/1-1.7e90042222c571803305.csv",
+    "main.ebd08dc3.css.map": "/quizzic/static/css/main.ebd08dc3.css.map",
+    "main.a6c3f9b1.js.map": "/quizzic/static/js/main.a6c3f9b1.js.map",
+    "787.4a73ed1a.chunk.js.map": "/quizzic/static/js/787.4a73ed1a.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.ebd08dc3.css",
+    "static/js/main.a6c3f9b1.js"
+  ]
+}
