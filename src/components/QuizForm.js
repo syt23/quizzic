@@ -2,7 +2,9 @@ import React from "react";
 import { useGlobalContext } from "../context";
 
 const QuizForm = () => {
-  const { quiz, handleChange, handleSubmit, error } = useGlobalContext();
+  const { quiz, handleChange, handleSubmit, error, NUM_SUBLEVELS } =
+    useGlobalContext();
+
   return (
     <section className="quiz-container">
       <form className="quiz">
@@ -14,39 +16,68 @@ const QuizForm = () => {
             name="numQuestions"
             className="form-control"
             id="numQuestions"
-            value={quiz.amount}
+            value={quiz.numQuestions}
             onChange={handleChange}
             min={1}
             max={50}
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="category">Category</label>
+          <label htmlFor="level">Level</label>
           <select
             className="form-select"
-            name="category"
-            id="category"
-            value={quiz.category}
+            name="level"
+            id="level"
+            value={quiz.level}
             onChange={handleChange}
           >
-            <option value="sports">sports</option>
-            <option value="history">history</option>
-            <option value="politics">politics</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
           </select>
         </div>
         <div className="mb-3">
-          <label htmlFor="difficulty">Difficulty</label>
+          <label htmlFor="subLevel">Sub Level</label>
           <select
             className="form-select"
-            name="difficulty"
-            id="difficulty"
-            value={quiz.difficulty}
+            name="subLevel"
+            id="subLevel"
+            value={quiz.subLevel}
             onChange={handleChange}
           >
-            <option value="easy">easy</option>
-            <option value="medium">medium</option>
-            <option value="hard">hard</option>
+            {new Array(NUM_SUBLEVELS[quiz.level]).fill().map((d, i) => (
+              <option value={i + 1} key={i + 1}>
+                {i + 1}
+              </option>
+            ))}
           </select>
+        </div>
+        <div className="mb-3">
+          <label htmlFor="direction">Direction</label>
+          <select
+            className="form-select"
+            name="direction"
+            id="direction"
+            value={quiz.direction}
+            onChange={handleChange}
+          >
+            <option value="e2k">English to Korean</option>
+            <option value="k2e">Korean to English</option>
+          </select>
+        </div>
+        <div className="mb-3">
+          <label htmlFor="description">Description</label>
+          <input
+            type="text"
+            disabled
+            name="description"
+            className="form-control"
+            id="description"
+            value={quiz.description}
+          />
         </div>
         {error && <p className="error">Can't generate questions</p>}
         <button

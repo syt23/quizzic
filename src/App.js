@@ -1,5 +1,5 @@
 import "./App.css";
-import { AppContext, useGlobalContext } from "./context";
+import { useGlobalContext } from "./context";
 import QuizForm from "./components/QuizForm";
 import { useEffect } from "react";
 import Loading from "./components/Loading";
@@ -9,15 +9,21 @@ function App() {
     status,
     isLoading,
     questions,
+    quiz,
     index,
     numCorrectAnswers,
     nextQuestion,
     checkAnswer,
+    answered,
   } = useGlobalContext();
 
-  useEffect(() => {
-    console.log("numCorrectAnswers", numCorrectAnswers);
-  }, []);
+  const capitalise = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+
+  // useEffect(() => {
+  //   console.log("numCorrectAnswers", numCorrectAnswers);
+  // }, []);
 
   if (status === "start") {
     return <QuizForm />;
@@ -27,33 +33,37 @@ function App() {
     return <Loading />;
   }
 
-  const { question, incorrect_answers, correct_answer } = questions[index];
-  let answers = [...incorrect_answers];
-  const tempIndex = Math.floor(Math.random() * 4);
-  if (tempIndex === 3) {
-    answers.push(correct_answer);
-  } else {
-    answers.push(answers[tempIndex]);
-    answers[tempIndex] = correct_answer;
-  }
+  const { question, answerOptions, correctAnswer } = questions[index];
 
   return (
     <main className="quiz-container">
       <h2 className="app-title">Quizzic</h2>
+      <p className="app-subtitle">Quiz {quiz.description}</p>
       <section className="quiz">
-        <p>
-          Correct Answer: {numCorrectAnswers}/{index}
-        </p>
+        <div className="row-box">
+          <p>
+            Correct Answer: {numCorrectAnswers}/{index}
+          </p>
+          <p>Questions: {quiz.numQuestions}</p>
+        </div>
         <article className="container">
-          <h2>{question}</h2>
+          <h2>
+            {index + 1}. {capitalise(question)}
+          </h2>
           <div>
-            {answers &&
-              answers.map((answer, index) => {
+            {answerOptions &&
+              answerOptions.map((answer, index) => {
                 return (
                   <button
                     key={index}
-                    className="btn btn-info answer-btn"
-                    onClick={() => checkAnswer(correct_answer === answer)}
+                    className={`btn answer-btn ${
+                      answered
+                        ? correctAnswer === answer
+                          ? "btn-success"
+                          : "btn-danger"
+                        : "btn-info"
+                    }`}
+                    onClick={() => checkAnswer(correctAnswer === answer)}
                   >
                     {answer}
                   </button>
@@ -64,6 +74,7 @@ function App() {
         <button
           className="btn btn-warning next-question-btn"
           onClick={nextQuestion}
+          disabled={!answered}
         >
           Next Question
         </button>
