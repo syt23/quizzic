@@ -36,7 +36,13 @@ const AppProvider = ({ children }) => {
 
     try {
       const newArray = rows.map((row) => {
-        const values = row.split(delim);
+        let values;
+        if (/.*".*".*/.test(row)) {
+          values = [row.split(",")[0], /".*"/.exec(row)[0].replaceAll('"', "")];
+          console.log(values);
+        } else {
+          values = row.split(delim);
+        }
         const eachObject = headers.reduce((obj, header, i) => {
           obj[header] = values[i].trim();
           return obj;
@@ -78,6 +84,13 @@ const AppProvider = ({ children }) => {
     return finalAnswers;
   };
 
+  const shuffleArray = (array) => {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  };
+
   const getQuestionsFromCsvArray = (csvArray) => {
     const { numQuestions, direction } = quiz;
     const answers = csvArray.map((word) =>
@@ -97,6 +110,7 @@ const AppProvider = ({ children }) => {
           question: direction === "e2k" ? item.english : item.korean,
         });
       });
+      shuffleArray(questions);
       return questions;
     } else {
       throw Error("No questions to parse");
@@ -106,9 +120,12 @@ const AppProvider = ({ children }) => {
   const fetchQuestions = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(require("./data/level1/1-1.csv"), {
-        responseType: "text",
-      });
+      const response = await axios.get(
+        require(`./data/level${quiz.level}/${quiz.level}-${quiz.subLevel}.csv`),
+        {
+          responseType: "text",
+        }
+      );
       const csvArray = processCSV(response.data);
       const questions = getQuestionsFromCsvArray(csvArray);
       if (questions.length > 0) {
