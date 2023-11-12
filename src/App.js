@@ -16,6 +16,7 @@ function App() {
     nextQuestion,
     checkAnswer,
     answered,
+    handleExit,
   } = useGlobalContext();
 
   const capitalise = (string) => {
@@ -75,14 +76,23 @@ function App() {
                   );
                 })}
             </div>
+            <div className="d-flex">
+              <button
+                className="btn btn-danger exit-btn"
+                type="submit"
+                onClick={handleExit}
+              >
+                Exit
+              </button>
+              <button
+                className="btn btn-warning next-question-btn"
+                onClick={nextQuestion}
+                disabled={!answered}
+              >
+                Next Question
+              </button>
+            </div>
           </article>
-          <button
-            className="btn btn-warning next-question-btn"
-            onClick={nextQuestion}
-            disabled={!answered}
-          >
-            Next Question
-          </button>
         </section>
       </main>
     </>

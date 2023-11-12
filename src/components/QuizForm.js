@@ -2,8 +2,14 @@ import React from "react";
 import { useGlobalContext } from "../context";
 
 const QuizForm = () => {
-  const { quiz, handleChange, handleSubmit, error, NUM_SUBLEVELS } =
-    useGlobalContext();
+  const {
+    quiz,
+    handleChange,
+    handleMultiSelectChange,
+    handleSubmit,
+    error,
+    NUM_SUBLEVELS,
+  } = useGlobalContext();
 
   return (
     <section className="quiz-container">
@@ -45,8 +51,9 @@ const QuizForm = () => {
             className="form-select"
             name="subLevel"
             id="subLevel"
+            multiple
             value={quiz.subLevel}
-            onChange={handleChange}
+            onChange={handleMultiSelectChange}
           >
             {new Array(NUM_SUBLEVELS[quiz.level]).fill().map((d, i) => (
               <option value={i + 1} key={i + 1}>

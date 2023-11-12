@@ -4,6 +4,8 @@ import axios from "axios";
 const AppContext = React.createContext();
 
 const AppProvider = ({ children }) => {
+  const START_STATUS = "start";
+  const END_STATUS = "end";
   const [isLoading, setLoading] = useState(false);
   const [questions, setQuestions] = useState([]);
   const [index, setIndex] = useState(0);
@@ -15,7 +17,7 @@ const AppProvider = ({ children }) => {
     numQuestions: 10,
     level: 1,
     direction: "e2k",
-    subLevel: 1,
+    subLevel: [1],
     description: "",
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -39,11 +41,11 @@ const AppProvider = ({ children }) => {
         let values;
         if (/.*".*".*/.test(row)) {
           values = [row.split(",")[0], /".*"/.exec(row)[0].replaceAll('"', "")];
-          console.log(values);
         } else {
           values = row.split(delim);
         }
         const eachObject = headers.reduce((obj, header, i) => {
+          // console.log(obj, header, i, values, row);
           obj[header] = values[i].trim();
           return obj;
         }, {});
@@ -96,10 +98,9 @@ const AppProvider = ({ children }) => {
     const answers = csvArray.map((word) =>
       direction === "e2k" ? word.korean : word.english
     );
-    const sliceArray = csvArray.slice(0, numQuestions);
-    const questions = [];
-    if (sliceArray.length > 0) {
-      sliceArray.forEach((item) => {
+    let questions = [];
+    if (csvArray.length > 0) {
+      csvArray.forEach((item) => {
         questions.push({
           correctAnswer: direction === "e2k" ? item.korean : item.english,
           answerOptions: getAnswerOptions(
@@ -111,6 +112,8 @@ const AppProvider = ({ children }) => {
         });
       });
       shuffleArray(questions);
+      questions = questions.slice(0, numQuestions);
+      console.log("shuffled", questions);
       return questions;
     } else {
       throw Error("No questions to parse");
@@ -120,13 +123,26 @@ const AppProvider = ({ children }) => {
   const fetchQuestions = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(
-        require(`./data/level${quiz.level}/${quiz.level}-${quiz.subLevel}.csv`),
-        {
-          responseType: "text",
-        }
-      );
-      const csvArray = processCSV(response.data);
+      let totalReponse = "";
+      for (let i = 0; i < quiz.subLevel.length; i++) {
+        const response = await axios
+          .get(
+            require(`./data/level${quiz.level}/${quiz.level}-${quiz.subLevel[i]}.csv`),
+            {
+              responseType: "text",
+            }
+          )
+          .catch((e) => {
+            console.log("Exception fetching data", e);
+            setError(true);
+            return;
+          });
+        console.log("response", response);
+        totalReponse += "\n" + response.data;
+      }
+      totalReponse = totalReponse.trim();
+
+      const csvArray = processCSV(totalReponse);
       const questions = getQuestionsFromCsvArray(csvArray);
       if (questions.length > 0) {
         setQuestions(questions);
@@ -156,7 +172,7 @@ const AppProvider = ({ children }) => {
       setIndex((oldIndex) => {
         const index = oldIndex + 1;
         if (index > questions.length - 1) {
-          setStatus("end");
+          setStatus(END_STATUS);
           openModal();
           return 0;
         } else {
@@ -179,7 +195,7 @@ const AppProvider = ({ children }) => {
   };
 
   const closeModal = () => {
-    setStatus("start");
+    setStatus(START_STATUS);
     setIsModalOpen(false);
   };
 
@@ -191,9 +207,24 @@ const AppProvider = ({ children }) => {
     });
   };
 
+  const handleMultiSelectChange = (e) => {
+    const { name } = e.target;
+    let value = Array.from(e.target.selectedOptions, (option) => option.value);
+    console.log(value);
+    setQuiz({
+      ...quiz,
+      [name]: value,
+    });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     fetchQuestions();
+  };
+
+  const handleExit = (e) => {
+    e.preventDefault();
+    setStatus(START_STATUS);
   };
 
   return (
@@ -213,7 +244,9 @@ const AppProvider = ({ children }) => {
         closeModal,
         openModal,
         handleChange,
+        handleMultiSelectChange,
         handleSubmit,
+        handleExit,
         NUM_SUBLEVELS,
       }}
     >
