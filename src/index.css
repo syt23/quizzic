@@ -130,3 +130,15 @@ code {
   font-size: 1.5rem;
   text-transform: none;
 }
+
+@media screen and (max-width: 600px) {
+  .quiz-container {
+    padding: 1rem;
+    overflow-x: scroll;
+  }
+
+  .quiz {
+    width: 100%;
+    min-width: 300px;
+  }
+}
