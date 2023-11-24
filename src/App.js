@@ -27,13 +27,14 @@ function App() {
   //   console.log("numCorrectAnswers", numCorrectAnswers);
   // }, []);
 
+  if (isLoading) {
+    return <Loading />;
+  }
+  
   if (status === "start") {
     return <QuizForm />;
   }
 
-  if (isLoading) {
-    return <Loading />;
-  }
 
   const { question, answerOptions, correctAnswer } = questions[index];
 
@@ -44,9 +45,11 @@ function App() {
         <h2 className="app-title">Quizzic</h2>
         <p className="app-subtitle">Quiz {quiz.description}</p>
         <section className="quiz">
-          <div className="row-box">
-            <p>Correct Answers: {numCorrectAnswers}</p>
-            <p>Questions: {questions.length}</p>
+          <div className="container">
+            <div className="row-box">
+              <p>Correct Answers: {numCorrectAnswers}</p>
+              <p>Questions: {questions.length}</p>
+            </div>
           </div>
           <article className="container">
             <h2>

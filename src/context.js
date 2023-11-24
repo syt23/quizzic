@@ -45,7 +45,7 @@ const AppProvider = ({ children }) => {
           values = row.split(delim);
         }
         const eachObject = headers.reduce((obj, header, i) => {
-          // console.log(obj, header, i, values, row);
+          console.log(obj, header, i, values, row);
           obj[header] = values[i].trim();
           return obj;
         }, {});
