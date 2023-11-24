@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/quizzic/static/css/main.cd69dcf9.css",
-    "main.js": "/quizzic/static/js/main.9fd91a5d.js",
+    "main.css": "/quizzic/static/css/main.a1897e89.css",
+    "main.js": "/quizzic/static/js/main.94e3d9ca.js",
     "static/js/787.4a73ed1a.chunk.js": "/quizzic/static/js/787.4a73ed1a.chunk.js",
     "static/media/6-9.csv": "/quizzic/static/media/6-9.ca45407597b13a7767e4.csv",
     "static/media/1-30.csv": "/quizzic/static/media/1-30.00feaa10d2e9692c1bf2.csv",
@@ -101,8 +101,8 @@
     "static/media/4-21.csv": "/quizzic/static/media/4-21.6beff08aa086952ad7a5.csv",
     "static/media/2-24.csv": "/quizzic/static/media/2-24.c3661522ecf078b33f6c.csv",
     "static/media/5-10.csv": "/quizzic/static/media/5-10.f4e67702bd0637eeaac7.csv",
-    "static/media/2-14.csv": "/quizzic/static/media/2-14.7d87aaa763edcb9fb2d0.csv",
     "static/media/2-16.csv": "/quizzic/static/media/2-16.0e44d7c1b1f0c799dc63.csv",
+    "static/media/2-14.csv": "/quizzic/static/media/2-14.f8ee73d8ef4928160fcd.csv",
     "static/media/6-13.csv": "/quizzic/static/media/6-13.927d07800c47a54e5db8.csv",
     "static/media/5-21.csv": "/quizzic/static/media/5-21.84f1ec722e5315215ea6.csv",
     "static/media/6-10.csv": "/quizzic/static/media/6-10.d62ef775cc5857f10592.csv",
@@ -152,19 +152,19 @@
     "static/media/3-25.csv": "/quizzic/static/media/3-25.322465b0e166f4f62668.csv",
     "static/media/5-12.csv": "/quizzic/static/media/5-12.9bbb66fd694c66f30e33.csv",
     "static/media/3-21.csv": "/quizzic/static/media/3-21.d171798f991e235c97e3.csv",
-    "static/media/1-1.csv": "/quizzic/static/media/1-1.14a0bbd5b212cf2c5cef.csv",
+    "static/media/1-1.csv": "/quizzic/static/media/1-1.ee9f535b471c7ada1153.csv",
     "static/media/3-1.csv": "/quizzic/static/media/3-1.962cc5f0327612c16715.csv",
     "static/media/1-2.csv": "/quizzic/static/media/1-2.d4a2685b585fc14c94a5.csv",
     "static/media/3-10.csv": "/quizzic/static/media/3-10.64af5db66220848fcee0.csv",
     "static/media/3-9.csv": "/quizzic/static/media/3-9.b1c68266e0167563deea.csv",
     "static/media/4-4.csv": "/quizzic/static/media/4-4.0211113146449434f83d.csv",
     "static/media/6-6.csv": "/quizzic/static/media/6-6.31d6cfe0d16ae931b73c.csv",
-    "main.cd69dcf9.css.map": "/quizzic/static/css/main.cd69dcf9.css.map",
-    "main.9fd91a5d.js.map": "/quizzic/static/js/main.9fd91a5d.js.map",
+    "main.a1897e89.css.map": "/quizzic/static/css/main.a1897e89.css.map",
+    "main.94e3d9ca.js.map": "/quizzic/static/js/main.94e3d9ca.js.map",
     "787.4a73ed1a.chunk.js.map": "/quizzic/static/js/787.4a73ed1a.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.cd69dcf9.css",
-    "static/js/main.9fd91a5d.js"
+    "static/css/main.a1897e89.css",
+    "static/js/main.94e3d9ca.js"
   ]
 }
