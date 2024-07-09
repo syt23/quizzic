@@ -1,12 +1,12 @@
 import React, { useState, useContext } from "react";
 import axios from "axios";
+import { CN, END_STATUS, KR, START_STATUS } from "./constants";
 
 const AppContext = React.createContext();
 
 const AppProvider = ({ children }) => {
-  const START_STATUS = "start";
-  const END_STATUS = "end";
   const [isLoading, setLoading] = useState(false);
+  const [subLevelOptions, setSubLevelOptions] = useState([]);
   const [questions, setQuestions] = useState([]);
   const [index, setIndex] = useState(0);
   const [numCorrectAnswers, setCorrent] = useState(0);
@@ -15,21 +15,95 @@ const AppProvider = ({ children }) => {
   const [answered, setAnswered] = useState(false);
   const [quiz, setQuiz] = useState({
     numQuestions: 10,
-    level: 1,
+    language: "",
+    level: "",
     direction: "e2k",
-    subLevel: [1],
+    subLevel: [],
     description: "",
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const NUM_SUBLEVELS = {
-    1: 30,
-    2: 25,
-    3: 25,
-    4: 25,
-    5: 25,
-    6: 25,
+  const levelOptions = {
+    cn: [1],
+    kr: [1, 2, 3, 4, 5, 6],
   };
+  const directionOptions = {
+    cn: [
+      {
+        label: "English to Chinese",
+        value: "e2c",
+      },
+      {
+        label: "Chinese to English",
+        value: "c2e",
+      },
+    ],
+    kr: [
+      {
+        label: "English to Korean",
+        value: "e2k",
+      },
+      {
+        label: "Korean to English",
+        value: "k2e",
+      },
+    ],
+  };
+  const languagesOptions = [
+    {
+      label: "Chinese",
+      value: "cn",
+    },
+    {
+      label: "Korean",
+      value: "kr",
+    },
+  ];
   const NUM_OPTIONS = 4;
+
+  const getSecondNumber = (fileName) => {
+    const regex = /^\d+-(\d+)\.csv$/;
+    const match = fileName.match(regex);
+    if (match && match[1]) {
+      return parseInt(match[1], 10);
+    } else {
+      console.log("Format is unexpected", fileName);
+    }
+    return null;
+  };
+
+  const getFileNameWithoutExtension = (fileName) => {
+    const regex = /^([\w-]+)\.csv$/;
+    const match = fileName.match(regex);
+    if (match && match[1]) {
+      return match[1];
+    } else {
+      console.log("Format is unexpected", fileName);
+    }
+    return null;
+  };
+
+  const fetchSubLevelOptions = async (language, level) => {
+    try {
+      const response = await axios.get(`/data/${language}/level${level}`, {
+        responseType: "text",
+      });
+
+      let subLevels = [];
+      let res = JSON.parse(response.data);
+      if (res && res.length > 0) {
+        if (language == KR) {
+          subLevels = res.map((x) => getSecondNumber(x)).sort((a, b) => a - b);
+        } else {
+          subLevels = res.map((x) => getFileNameWithoutExtension(x));
+        }
+      }
+      return subLevels;
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+      setError(true);
+    }
+  };
 
   const processCSV = (str, delim = ",") => {
     // const headers = str.slice(0, str.indexOf("\n")).split(delim);
@@ -37,20 +111,25 @@ const AppProvider = ({ children }) => {
     const rows = str.split("\n");
 
     try {
-      const newArray = rows.map((row) => {
-        let values;
-        if (/.*".*".*/.test(row)) {
-          values = [row.split(",")[0], /".*"/.exec(row)[0].replaceAll('"', "")];
-        } else {
-          values = row.split(delim);
-        }
-        const eachObject = headers.reduce((obj, header, i) => {
-          console.log(obj, header, i, values, row);
-          obj[header] = values[i].trim();
-          return obj;
-        }, {});
-        return eachObject;
-      });
+      const newArray = rows
+        .filter((row) => row !== "")
+        .map((row) => {
+          let values;
+          if (/.*".*".*/.test(row)) {
+            values = [
+              row.split(",")[0],
+              /".*"/.exec(row)[0].replaceAll('"', ""),
+            ];
+          } else {
+            values = row.split(delim);
+          }
+          const eachObject = headers.reduce((obj, header, i) => {
+            console.log(obj, header, i, values, row);
+            obj[header] = values[i].trim();
+            return obj;
+          }, {});
+          return eachObject;
+        });
       return newArray;
     } catch (err) {
       console.log(err);
@@ -125,13 +204,15 @@ const AppProvider = ({ children }) => {
     try {
       let totalReponse = "";
       for (let i = 0; i < quiz.subLevel.length; i++) {
+        let url = `/data/${quiz.language}/level${quiz.level}/${quiz.subLevel[i]}.csv`;
+        if (quiz.language === KR) {
+          url = `/data/${quiz.language}/level${quiz.level}/${quiz.level}-${quiz.subLevel[i]}.csv`;
+        }
+
         const response = await axios
-          .get(
-            require(`./data/level${quiz.level}/${quiz.level}-${quiz.subLevel[i]}.csv`),
-            {
-              responseType: "text",
-            }
-          )
+          .get(url, {
+            responseType: "text",
+          })
           .catch((e) => {
             console.log("Exception fetching data", e);
             setError(true);
@@ -201,10 +282,33 @@ const AppProvider = ({ children }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    let newQuiz = quiz;
+    newQuiz[name] = value;
+    if (name == "language") {
+      newQuiz = setLevel(newQuiz, value);
+      fetchAndSetSubLevelOptions(newQuiz.language, newQuiz.level);
+    } else if (name == "level") {
+      fetchAndSetSubLevelOptions(newQuiz.language, newQuiz.level);
+    }
     setQuiz({
-      ...quiz,
-      [name]: value,
+      ...newQuiz,
     });
+  };
+
+  const setLevel = (newQuiz, language) => {
+    if (language in levelOptions) {
+      newQuiz.level = levelOptions[language][0];
+    } else {
+      console.log("No such language: " + language + ", set to default (cn)");
+      newQuiz.level = levelOptions[CN][0];
+    }
+    return newQuiz;
+  };
+
+  const fetchAndSetSubLevelOptions = async (language, level) => {
+    const subLevels = await fetchSubLevelOptions(language, level);
+    console.log("subLevels", subLevels);
+    setSubLevelOptions(subLevels);
   };
 
   const handleMultiSelectChange = (e) => {
@@ -236,6 +340,7 @@ const AppProvider = ({ children }) => {
         numCorrectAnswers,
         error,
         quiz,
+        subLevelOptions,
         status,
         isModalOpen,
         answered,
@@ -247,7 +352,9 @@ const AppProvider = ({ children }) => {
         handleMultiSelectChange,
         handleSubmit,
         handleExit,
-        NUM_SUBLEVELS,
+        levelOptions,
+        languagesOptions,
+        directionOptions,
       }}
     >
       {children}

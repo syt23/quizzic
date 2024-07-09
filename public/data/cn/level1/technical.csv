@@ -1,0 +1,177 @@
+中台,middleware
+技术中台,technical services e.g. Spring Boot、Dubbo、Zookeeper、Kafka
+业务中台,business services e.g. Spring Cloud、MyBatis、RocketMQ
+数据中台,data services e.g. Hadoop、HBase、Spark、Flink
+物联网中台,IOT services e.g. Mqtt、CoAP、OneNet
+前台/前端,frontend
+后台/后端,backend
+移动端/手机端,mobile
+服务端,server
+业务,products
+应用,application
+电商,ecommerce
+框架,framework
+安卓,android
+项目,project
+程序,program
+技术栈,technology stack
+
+实时,realtime
+流式,streaming
+批量/批式,batch
+大规模,large scale
+本地,local
+生产,production
+流水线,pipeline
+分布,distributed
+
+元素,elements
+页面,page
+搜索框,search bar
+接口/界面- interface
+截屏/截图,screenshot
+快照,snapshot
+遍历,traverse
+渲染,render
+控件,control (e.g.button)
+组件,component
+浏览,browse
+曝光,exposure
+图表,chart
+角标,subscript
+弹窗/弹框,popup
+轮播图,carousel
+拦,bar
+字符,character
+仪表盘,dashboard
+高清,HD
+分辨率,resolution
+嵌套,nested
+键盘,keyboard
+注入,inject
+跨域,cross domain
+柱形图,column chart
+堆叠图,stacked chart
+折线图,line chart
+环形图,donut chart
+双轴图,dual axis chart
+轴,axis
+链接/链路,link
+上传,upload
+页面,page
+列表,list
+下划,underline
+引号,quotation marks
+正则表达式,regex
+
+队列,queue
+资源,resource
+开销,overhead
+并发,concurrent
+节点,node
+磁盘,disk
+集群,cluster
+划分,partition
+副本,replica
+实例,instance
+日志,logs
+配置,configuration
+调度,scheduling
+抢占式,preemptive
+缓存,cache
+存储,storage
+参数,parameter
+容器,container
+端口,port
+线程,thread
+绪,thread
+脚本,script
+目录,catalog/ directory 
+命令,command
+路径,path 
+镜像,mirror
+内核,kernel
+内存,memory
+环境变量,environmental variables
+优先级,priority
+轮询,polling
+构建镜像,build image
+网关,gateway
+
+表,table
+库,database
+仓库,repository
+维度,dimension
+数据源,data source
+数仓,data warehouse
+机房,data center
+元信息/元数据,metadata
+数据流,data stream
+数据驱动,data driven
+数据集,dataset 
+关联,associate
+
+分群,grouping
+模型,model
+解析,analysis
+洞察,insights
+漏斗,funnel
+映射,mapping
+抽样,sampling
+埋点,event tracking
+事件,event
+回溯,traceback
+属性,property
+属性值,property value
+命中人数,number of hits
+波动,fluctuate
+趋势,trend
+
+概率,probability
+统计,statistics
+基准值,reference value
+系数,coeffcient
+
+状返回态,status return
+代码- code
+枚举类型,enum class
+函数,function
+串,string
+(反)序列化,(de)serialisation
+字符,character
+分隔符,delimiter
+封装,encapsulation
+
+引擎,engine
+基础架构,infrastructure
+拉黑,blacklisted
+性能,performance
+去重,deduplicate
+分支,branch
+口径,caliber 
+带宽,bandwidth
+光缆,optical cable
+虚拟,virtual
+压缩,compression
+编码,encoding
+标签,tag
+权限/接入,access
+泛滥,flooding
+行数,row
+验收,acceptance test
+模块,module
+字段,field
+嵌,embedded
+渠道,channel
+体系,system
+漏洞,loopholes
+剪辑,clip
+预置,preset
+层次化,layering
+插件,plugin
+构造,structure
+加密,encryption
+备份,backup
+并集,union
+加工,processing
+烟囱式,chimney-style system

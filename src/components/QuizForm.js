@@ -4,11 +4,14 @@ import { useGlobalContext } from "../context";
 const QuizForm = () => {
   const {
     quiz,
+    subLevelOptions,
     handleChange,
     handleMultiSelectChange,
     handleSubmit,
     error,
-    NUM_SUBLEVELS,
+    levelOptions,
+    languagesOptions,
+    directionOptions,
   } = useGlobalContext();
 
   return (
@@ -29,6 +32,23 @@ const QuizForm = () => {
           />
         </div>
         <div className="mb-3">
+          <label htmlFor="language">Language</label>
+          <select
+            defaultValue="default"
+            className="form-select"
+            name="language"
+            id="language"
+            value={quiz.language}
+            onChange={handleChange}
+          >
+            <option value="default">Select a language</option>
+            {languagesOptions &&
+              languagesOptions.map((i) => (
+                <option value={i.value}>{i.label}</option>
+              ))}
+          </select>
+        </div>
+        <div className="mb-3">
           <label htmlFor="level">Level</label>
           <select
             className="form-select"
@@ -37,12 +57,10 @@ const QuizForm = () => {
             value={quiz.level}
             onChange={handleChange}
           >
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
+            {levelOptions[quiz.language] &&
+              levelOptions[quiz.language].map((i) => (
+                <option value={i}>{i}</option>
+              ))}
           </select>
         </div>
         <div className="mb-3">
@@ -55,11 +73,12 @@ const QuizForm = () => {
             value={quiz.subLevel}
             onChange={handleMultiSelectChange}
           >
-            {new Array(NUM_SUBLEVELS[quiz.level]).fill().map((d, i) => (
-              <option value={i + 1} key={i + 1}>
-                {i + 1}
-              </option>
-            ))}
+            {subLevelOptions &&
+              subLevelOptions.map((x, i) => (
+                <option value={x} key={i}>
+                  {x}
+                </option>
+              ))}
           </select>
         </div>
         <div className="mb-3">
@@ -71,8 +90,10 @@ const QuizForm = () => {
             value={quiz.direction}
             onChange={handleChange}
           >
-            <option value="e2k">English to Korean</option>
-            <option value="k2e">Korean to English</option>
+            {directionOptions[quiz.language] &&
+              directionOptions[quiz.language].map((x) => (
+                <option value={x.value}>{x.label}</option>
+              ))}
           </select>
         </div>
         <div className="mb-3">
