@@ -4,6 +4,9 @@ import QuizForm from "./components/QuizForm";
 import { useEffect } from "react";
 import Loading from "./components/Loading";
 import Modal from "./components/Modal";
+import MultipleChoiceQuestion from "./components/MultipleChoiceQuestion";
+import { MCQ_FORMAT, TEXT_FORMAT } from "./constants";
+import FreeTextQuestion from "./components/FreeTextQuestion";
 
 function App() {
   const {
@@ -30,13 +33,36 @@ function App() {
   if (isLoading) {
     return <Loading />;
   }
-  
+
   if (status === "start") {
     return <QuizForm />;
   }
 
-
   const { question, answerOptions, correctAnswer } = questions[index];
+
+  const Question = () => {
+    switch (quiz.format) {
+      case "mcq":
+        return (
+          <MultipleChoiceQuestion
+            answered={answered}
+            correctAnswer={correctAnswer}
+            answerOptions={answerOptions}
+            checkAnswer={checkAnswer}
+          />
+        );
+      case "tx":
+        return (
+          <FreeTextQuestion
+            answered={answered}
+            correctAnswer={correctAnswer}
+            checkAnswer={checkAnswer}
+          />
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <>
@@ -55,30 +81,7 @@ function App() {
             <h2>
               {index + 1}. {capitalise(question)}
             </h2>
-            <div>
-              {answerOptions &&
-                answerOptions.map((answer, index) => {
-                  return (
-                    <button
-                      key={index}
-                      className={`btn answer-btn ${
-                        answered
-                          ? correctAnswer === answer
-                            ? "btn-success"
-                            : "btn-danger"
-                          : "btn-info"
-                      }`}
-                      onClick={() => {
-                        if (!answered) {
-                          checkAnswer(correctAnswer === answer);
-                        }
-                      }}
-                    >
-                      {answer}
-                    </button>
-                  );
-                })}
-            </div>
+            <div>{Question()}</div>
             <div className="d-flex">
               <button
                 className="btn btn-danger exit-btn"

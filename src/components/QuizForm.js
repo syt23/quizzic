@@ -12,6 +12,7 @@ const QuizForm = () => {
     levelOptions,
     languagesOptions,
     directionOptions,
+    formatOptions,
   } = useGlobalContext();
 
   return (
@@ -93,6 +94,23 @@ const QuizForm = () => {
             {directionOptions[quiz.language] &&
               directionOptions[quiz.language].map((x) => (
                 <option value={x.value}>{x.label}</option>
+              ))}
+          </select>
+        </div>
+        <div className="mb-3">
+          <label htmlFor="format">Format</label>
+          <select
+            defaultValue="default"
+            className="form-select"
+            name="format"
+            id="format"
+            value={quiz.format}
+            onChange={handleChange}
+          >
+            <option value="default">Select a format</option>
+            {formatOptions &&
+              formatOptions.map((i) => (
+                <option value={i.value}>{i.label}</option>
               ))}
           </select>
         </div>

@@ -1,6 +1,13 @@
 import React, { useState, useContext } from "react";
 import axios from "axios";
-import { CN, END_STATUS, KR, START_STATUS } from "./constants";
+import {
+  CN_LANGUAGE,
+  END_STATUS,
+  KR_LANGUAGE,
+  MCQ_FORMAT,
+  START_STATUS,
+  TEXT_FORMAT,
+} from "./constants";
 
 const AppContext = React.createContext();
 
@@ -20,6 +27,7 @@ const AppProvider = ({ children }) => {
     direction: "e2k",
     subLevel: [],
     description: "",
+    format: "mcq",
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const levelOptions = {
@@ -51,11 +59,21 @@ const AppProvider = ({ children }) => {
   const languagesOptions = [
     {
       label: "Chinese",
-      value: "cn",
+      value: CN_LANGUAGE,
     },
     {
       label: "Korean",
-      value: "kr",
+      value: KR_LANGUAGE,
+    },
+  ];
+  const formatOptions = [
+    {
+      label: "MCQ",
+      value: MCQ_FORMAT,
+    },
+    {
+      label: "Text",
+      value: TEXT_FORMAT,
     },
   ];
   const NUM_OPTIONS = 4;
@@ -91,7 +109,7 @@ const AppProvider = ({ children }) => {
       let subLevels = [];
       let res = JSON.parse(response.data);
       if (res && res.length > 0) {
-        if (language == KR) {
+        if (language == KR_LANGUAGE) {
           subLevels = res.map((x) => getSecondNumber(x)).sort((a, b) => a - b);
         } else {
           subLevels = res.map((x) => getFileNameWithoutExtension(x));
@@ -205,7 +223,7 @@ const AppProvider = ({ children }) => {
       let totalReponse = "";
       for (let i = 0; i < quiz.subLevel.length; i++) {
         let url = `/data/${quiz.language}/level${quiz.level}/${quiz.subLevel[i]}.csv`;
-        if (quiz.language === KR) {
+        if (quiz.language === KR_LANGUAGE) {
           url = `/data/${quiz.language}/level${quiz.level}/${quiz.level}-${quiz.subLevel[i]}.csv`;
         }
 
@@ -300,7 +318,7 @@ const AppProvider = ({ children }) => {
       newQuiz.level = levelOptions[language][0];
     } else {
       console.log("No such language: " + language + ", set to default (cn)");
-      newQuiz.level = levelOptions[CN][0];
+      newQuiz.level = levelOptions[CN_LANGUAGE][0];
     }
     return newQuiz;
   };
@@ -355,6 +373,7 @@ const AppProvider = ({ children }) => {
         levelOptions,
         languagesOptions,
         directionOptions,
+        formatOptions,
       }}
     >
       {children}
