@@ -15,7 +15,6 @@
 项目,project
 程序,program
 技术栈,technology stack
-
 实时,realtime
 流式,streaming
 批量/批式,batch
@@ -24,7 +23,6 @@
 生产,production
 流水线,pipeline
 分布,distributed
-
 元素,elements
 页面,page
 搜索框,search bar
@@ -42,6 +40,7 @@
 弹窗/弹框,popup
 轮播图,carousel
 拦,bar
+栏/柱,column
 字符,character
 仪表盘,dashboard
 高清,HD
@@ -63,7 +62,10 @@
 下划,underline
 引号,quotation marks
 正则表达式,regex
-
+浏览器,browser
+二维码,QR code
+交互式,interactive
+加载,loading
 队列,queue
 资源,resource
 开销,overhead
@@ -71,7 +73,7 @@
 节点,node
 磁盘,disk
 集群,cluster
-划分,partition
+划分/分区,partition
 副本,replica
 实例,instance
 日志,logs
@@ -82,7 +84,6 @@
 存储,storage
 参数,parameter
 容器,container
-端口,port
 线程,thread
 绪,thread
 脚本,script
@@ -94,10 +95,11 @@
 内存,memory
 环境变量,environmental variables
 优先级,priority
-轮询,polling
 构建镜像,build image
+端口,port
+轮询,polling
 网关,gateway
-
+路由,routing
 表,table
 库,database
 仓库,repository
@@ -110,7 +112,6 @@
 数据驱动,data driven
 数据集,dataset 
 关联,associate
-
 分群,grouping
 模型,model
 解析,analysis
@@ -120,18 +121,16 @@
 抽样,sampling
 埋点,event tracking
 事件,event
-回溯,traceback
+回溯,backtrace
 属性,property
 属性值,property value
 命中人数,number of hits
 波动,fluctuate
 趋势,trend
-
 概率,probability
 统计,statistics
 基准值,reference value
 系数,coeffcient
-
 状返回态,status return
 代码,code
 枚举类型,enum class
@@ -141,9 +140,11 @@
 字符,character
 分隔符,delimiter
 封装,encapsulation
-
+对象,object
+耦合,coupling
+递归,recursion
 引擎,engine
-基础架构,infrastructure
+基础架构/基建,infrastructure
 拉黑,blacklisted
 性能,performance
 去重,deduplicate
@@ -175,3 +176,8 @@
 并集,union
 加工,processing
 烟囱式,chimney-style system
+拓扑,topology
+回归验证,regression test
+移动网络,mobile network
+多重认证,MFA
+主从架构,master slave architecture

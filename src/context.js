@@ -273,7 +273,7 @@ const AppProvider = ({ children }) => {
         if (index > questions.length - 1) {
           setStatus(END_STATUS);
           openModal();
-          return 0;
+          return oldIndex;
         } else {
           return index;
         }
@@ -341,12 +341,14 @@ const AppProvider = ({ children }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setIndex(0);
     fetchQuestions();
   };
 
   const handleExit = (e) => {
     e.preventDefault();
     setStatus(START_STATUS);
+    setIndex(0);
   };
 
   return (
