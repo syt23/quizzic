@@ -37,7 +37,7 @@
 覆盖,cover
 审批,approve
 验证,validate
-开启,enable
+开启/启用,enable
 抽象,abstract
 涨,rise
 沉淀,precipitate
@@ -49,17 +49,20 @@
 归类,classify
 汇报,report
 输出,export
-审核,review
+审核/回顾,review
 筹备,prepare
-
+申报,declare
+核实,verify
+呼应,echo
+抵消,offset
+履行,fulfill
 缩短,shorten
-覆盖,overwrite
 回滚,rollback
 删除,delete
 剔除,cull
 筛选/过滤,filter
 驳回,reject
-延迟/延期,delay
+延迟/延期/耽误,delay
 拆分,split up
 损坏,damage
 裁剪,clip
@@ -71,4 +74,5 @@
 驱逐,expel
 拦截,intercept
 排斥,exclude
-耽误,delay
+操纵,manipulate
+撤销,cancel
