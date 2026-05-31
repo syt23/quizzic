@@ -1,5 +1,5 @@
-import React from "react";
 import { useGlobalContext } from "../context";
+import styles from "./Modal.module.css";
 
 const Modal = () => {
   const { isModalOpen, closeModal, numCorrectAnswers, questions } =
@@ -8,15 +8,17 @@ const Modal = () => {
   return (
     <div
       className={`${
-        isModalOpen ? "modal-container isOpen" : "modal-container"
+        isModalOpen
+          ? styles["modal-container"] + " " + styles["isOpen"]
+          : styles["modal-container"]
       }`}
     >
-      <div className="modal-content">
+      <div className={styles["modal-content"]}>
         <h2>Congrats!</h2>
         <p>
           You answered{" "}
-          {((numCorrectAnswers / questions.length) * 100).toFixed(0)}% of
-          questions correctly
+          {((numCorrectAnswers / questions.length) * 100).toFixed(0)}% (
+          {numCorrectAnswers}/{questions.length}) of questions correctly
         </p>
         <button className="btn btn-success close-btn" onClick={closeModal}>
           Play Again

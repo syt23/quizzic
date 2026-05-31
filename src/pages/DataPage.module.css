@@ -1,0 +1,35 @@
+.data-page-container {
+  background-color: #f2f5fa;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 2.4rem;
+}
+
+.form-card {
+  min-width: 500px;
+  max-width: 80%;
+}
+
+.result-container {
+  /* overflow-y: scroll; */
+  margin-top: 2.4rem;
+  width: 100%;
+}
+
+@media screen and (max-width: 600px) {
+  .data-page-container {
+    padding: 1rem;
+    overflow-x: scroll;
+  }
+
+  .form-card {
+    width: 100%;
+    min-width: 300px;
+    max-width: unset;
+    padding: 1rem;
+  }
+}

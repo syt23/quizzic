@@ -1,15 +1,17 @@
-import React, { useState, useContext } from "react";
 import axios from "axios";
+import React, { useContext, useState } from "react";
 import {
   CN_LANGUAGE,
+  DIRECTION_OPTIONS,
   END_STATUS,
+  FORMAT_OPTIONS,
   KR_LANGUAGE,
-  MCQ_FORMAT,
+  LANGUAGE_OPTIONS,
+  LEVEL_OPTIONS,
   START_STATUS,
-  TEXT_FORMAT,
 } from "./constants";
 
-const AppContext = React.createContext();
+const AppContext = React.createContext(null);
 
 const AppProvider = ({ children }) => {
   const [isLoading, setLoading] = useState(false);
@@ -17,65 +19,20 @@ const AppProvider = ({ children }) => {
   const [questions, setQuestions] = useState([]);
   const [index, setIndex] = useState(0);
   const [numCorrectAnswers, setCorrent] = useState(0);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState("");
   const [status, setStatus] = useState("start");
   const [answered, setAnswered] = useState(false);
   const [quiz, setQuiz] = useState({
     numQuestions: 10,
     language: "",
-    level: "",
+    level: 1,
     direction: "e2k",
     subLevel: [],
     description: "",
     format: "mcq",
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const levelOptions = {
-    cn: [1],
-    kr: [1, 2, 3, 4, 5, 6],
-  };
-  const directionOptions = {
-    cn: [
-      {
-        label: "English to Chinese",
-        value: "e2c",
-      },
-      {
-        label: "Chinese to English",
-        value: "c2e",
-      },
-    ],
-    kr: [
-      {
-        label: "English to Korean",
-        value: "e2k",
-      },
-      {
-        label: "Korean to English",
-        value: "k2e",
-      },
-    ],
-  };
-  const languagesOptions = [
-    {
-      label: "Chinese",
-      value: CN_LANGUAGE,
-    },
-    {
-      label: "Korean",
-      value: KR_LANGUAGE,
-    },
-  ];
-  const formatOptions = [
-    {
-      label: "MCQ",
-      value: MCQ_FORMAT,
-    },
-    {
-      label: "Text",
-      value: TEXT_FORMAT,
-    },
-  ];
+
   const NUM_OPTIONS = 4;
 
   const getSecondNumber = (fileName) => {
@@ -84,7 +41,7 @@ const AppProvider = ({ children }) => {
     if (match && match[1]) {
       return parseInt(match[1], 10);
     } else {
-      console.log("Format is unexpected", fileName);
+      console.warn("Format is unexpected", fileName);
     }
     return null;
   };
@@ -95,7 +52,7 @@ const AppProvider = ({ children }) => {
     if (match && match[1]) {
       return match[1];
     } else {
-      console.log("Format is unexpected", fileName);
+      console.warn("Format is unexpected", fileName);
     }
     return null;
   };
@@ -109,17 +66,24 @@ const AppProvider = ({ children }) => {
       let subLevels = [];
       let res = JSON.parse(response.data);
       if (res && res.length > 0) {
-        if (language == KR_LANGUAGE) {
-          subLevels = res.map((x) => getSecondNumber(x)).sort((a, b) => a - b);
+        if (language === KR_LANGUAGE) {
+          subLevels = res
+            .map((x) => getSecondNumber(x))
+            .sort((a, b) => a - b)
+            .map((x) => ({ key: x, value: x, label: `Sub Level ${x}` }));
+        } else if (language === CN_LANGUAGE) {
+          subLevels = res
+            .map((x) => getFileNameWithoutExtension(x))
+            .map((x) => ({ key: x, value: x, label: `Sub Level ${x}` }));
         } else {
-          subLevels = res.map((x) => getFileNameWithoutExtension(x));
+          console.error("No such language: " + language);
         }
       }
       return subLevels;
     } catch (err) {
-      console.log(err);
+      console.error("error", err);
       setLoading(false);
-      setError(true);
+      setError(err.message);
     }
   };
 
@@ -134,15 +98,13 @@ const AppProvider = ({ children }) => {
         .map((row) => {
           let values;
           if (/.*".*".*/.test(row)) {
-            values = [
-              row.split(",")[0],
-              /".*"/.exec(row)[0].replaceAll('"', ""),
-            ];
+            const result = /".*"/.exec(row)?.[0]?.replaceAll('"', "") ?? "";
+            values = [row.split(",")[0], result];
           } else {
             values = row.split(delim);
           }
           const eachObject = headers.reduce((obj, header, i) => {
-            console.log(obj, header, i, values, row);
+            // console.debug(obj, header, i, values, row);
             obj[header] = values[i].trim();
             return obj;
           }, {});
@@ -150,7 +112,7 @@ const AppProvider = ({ children }) => {
         });
       return newArray;
     } catch (err) {
-      console.log(err);
+      console.error("error", err);
       throw Error("Error in parsing csv");
     }
   };
@@ -193,7 +155,7 @@ const AppProvider = ({ children }) => {
   const getQuestionsFromCsvArray = (csvArray) => {
     const { numQuestions, direction } = quiz;
     const answers = csvArray.map((word) =>
-      direction === "e2k" ? word.korean : word.english
+      direction === "e2k" ? word.korean : word.english,
     );
     let questions = [];
     if (csvArray.length > 0) {
@@ -203,50 +165,58 @@ const AppProvider = ({ children }) => {
           answerOptions: getAnswerOptions(
             answers,
             direction === "e2k" ? item.korean : item.english,
-            NUM_OPTIONS
+            NUM_OPTIONS,
           ),
           question: direction === "e2k" ? item.english : item.korean,
         });
       });
       shuffleArray(questions);
       questions = questions.slice(0, numQuestions);
-      console.log("shuffled", questions);
+      console.debug("shuffled", questions);
       return questions;
     } else {
       throw Error("No questions to parse");
     }
   };
 
+  const getQuestionsFromCsv = async (language, level, subLevel) => {
+    let totalReponse = "";
+    for (let i = 0; i < subLevel.length; i++) {
+      let url = `/data/${language}/level${level}/${subLevel[i]}.csv`;
+      if (language === KR_LANGUAGE) {
+        url = `/data/${language}/level${level}/${level}-${subLevel[i]}.csv`;
+      } else if (language === CN_LANGUAGE) {
+        url = `/data/${language}/level${level}/${subLevel[i]}.csv`;
+      } else {
+        console.error("No such language: " + language);
+      }
+
+      const response = await axios.get(url, {
+        responseType: "text",
+      });
+
+      console.debug("getQuestionsFromCsv", response);
+      totalReponse += "\n" + response.data;
+    }
+    totalReponse = totalReponse.trim();
+
+    const csvArray = processCSV(totalReponse);
+    return csvArray;
+  };
+
   const fetchQuestions = async () => {
     setLoading(true);
     try {
-      let totalReponse = "";
-      for (let i = 0; i < quiz.subLevel.length; i++) {
-        let url = `/data/${quiz.language}/level${quiz.level}/${quiz.subLevel[i]}.csv`;
-        if (quiz.language === KR_LANGUAGE) {
-          url = `/data/${quiz.language}/level${quiz.level}/${quiz.level}-${quiz.subLevel[i]}.csv`;
-        }
-
-        const response = await axios
-          .get(url, {
-            responseType: "text",
-          })
-          .catch((e) => {
-            console.log("Exception fetching data", e);
-            setError(true);
-            return;
-          });
-        console.log("response", response);
-        totalReponse += "\n" + response.data;
-      }
-      totalReponse = totalReponse.trim();
-
-      const csvArray = processCSV(totalReponse);
+      const csvArray = await getQuestionsFromCsv(
+        quiz.language,
+        quiz.level,
+        quiz.subLevel,
+      );
       const questions = getQuestionsFromCsvArray(csvArray);
       if (questions.length > 0) {
         setQuestions(questions);
         setLoading(false);
-        setError(false);
+        setError("");
         setAnswered(false);
         setCorrent(0);
         setStatus("progress");
@@ -256,12 +226,14 @@ const AppProvider = ({ children }) => {
         });
       } else {
         setLoading(false);
-        setError(true);
+        setError(
+          "No questions generated, please check if the csv files are in the correct format and not empty",
+        );
       }
     } catch (err) {
-      console.log(err);
+      console.error("error", err);
       setLoading(false);
-      setError(true);
+      setError(err.message);
     }
   };
 
@@ -302,10 +274,19 @@ const AppProvider = ({ children }) => {
     const { name, value } = e.target;
     let newQuiz = quiz;
     newQuiz[name] = value;
-    if (name == "language") {
+    if (name === "language") {
       newQuiz = setLevel(newQuiz, value);
+      setQuiz({
+        ...quiz,
+        level: 1,
+        subLevel: [1],
+      });
       fetchAndSetSubLevelOptions(newQuiz.language, newQuiz.level);
-    } else if (name == "level") {
+    } else if (name === "level") {
+      setQuiz({
+        ...quiz,
+        subLevel: [1],
+      });
       fetchAndSetSubLevelOptions(newQuiz.language, newQuiz.level);
     }
     setQuiz({
@@ -314,25 +295,25 @@ const AppProvider = ({ children }) => {
   };
 
   const setLevel = (newQuiz, language) => {
-    if (language in levelOptions) {
-      newQuiz.level = levelOptions[language][0];
+    if (language in LEVEL_OPTIONS) {
+      newQuiz.level = LEVEL_OPTIONS[language][0].value;
     } else {
-      console.log("No such language: " + language + ", set to default (cn)");
-      newQuiz.level = levelOptions[CN_LANGUAGE][0];
+      console.warn("No such language: " + language + ", set to default (cn)");
+      newQuiz.level = LEVEL_OPTIONS[CN_LANGUAGE][0].value;
     }
     return newQuiz;
   };
 
   const fetchAndSetSubLevelOptions = async (language, level) => {
     const subLevels = await fetchSubLevelOptions(language, level);
-    console.log("subLevels", subLevels);
+    console.debug("fetchAndSetSubLevelOptions", subLevels);
     setSubLevelOptions(subLevels);
   };
 
   const handleMultiSelectChange = (e) => {
     const { name } = e.target;
     let value = Array.from(e.target.selectedOptions, (option) => option.value);
-    console.log(value);
+    console.debug("handleMultiSelectChange", value);
     setQuiz({
       ...quiz,
       [name]: value,
@@ -370,10 +351,12 @@ const AppProvider = ({ children }) => {
         handleMultiSelectChange,
         handleSubmit,
         handleExit,
-        levelOptions,
-        languagesOptions,
-        directionOptions,
-        formatOptions,
+        fetchSubLevelOptions,
+        getQuestionsFromCsv,
+        LEVEL_OPTIONS,
+        LANGUAGE_OPTIONS,
+        DIRECTION_OPTIONS,
+        FORMAT_OPTIONS,
       }}
     >
       {children}

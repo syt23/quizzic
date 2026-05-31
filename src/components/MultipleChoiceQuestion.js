@@ -13,7 +13,7 @@ const MultipleChoiceQuestion = ({
           return (
             <button
               key={index}
-              className={`btn answer-btn ${
+              className={`btn w-100 answer-btn ${
                 answered
                   ? correctAnswer === answer
                     ? "btn-success"

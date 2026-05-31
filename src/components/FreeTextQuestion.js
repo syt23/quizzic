@@ -5,7 +5,7 @@ const FreeTextQuestion = ({ answered, correctAnswer, checkAnswer }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("answered", answered);
-    checkAnswer(correctAnswer == answer);
+    checkAnswer(correctAnswer === answer);
   };
   const handleChange = (e) => {
     const value = e.target.value;

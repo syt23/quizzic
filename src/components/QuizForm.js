@@ -1,26 +1,30 @@
-import React from "react";
+import {
+  DIRECTION_OPTIONS,
+  FORMAT_OPTIONS,
+  LANGUAGE_OPTIONS,
+  LEVEL_OPTIONS,
+} from "../constants";
 import { useGlobalContext } from "../context";
+import styles from "./QuizForm.module.css";
 
 const QuizForm = () => {
   const {
     quiz,
-    subLevelOptions,
     handleChange,
     handleMultiSelectChange,
     handleSubmit,
+    subLevelOptions,
     error,
-    levelOptions,
-    languagesOptions,
-    directionOptions,
-    formatOptions,
   } = useGlobalContext();
 
   return (
-    <section className="quiz-container">
-      <form className="quiz">
+    <section className={styles["quiz-container"]}>
+      <form className={styles["g-card"]}>
         <h2 className="mb-3 text-center">Let's Start Quiz</h2>
         <div className="mb-3">
-          <label htmlFor="numQuestions">Number of Questions</label>
+          <label className="form-label fw-bold" htmlFor="numQuestions">
+            Number of Questions
+          </label>
           <input
             type="number"
             name="numQuestions"
@@ -33,9 +37,11 @@ const QuizForm = () => {
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="language">Language</label>
+          <label className="form-label fw-bold" htmlFor="language">
+            Language
+          </label>
           <select
-            defaultValue="default"
+            // defaultValue="default"
             className="form-select"
             name="language"
             id="language"
@@ -43,14 +49,18 @@ const QuizForm = () => {
             onChange={handleChange}
           >
             <option value="default">Select a language</option>
-            {languagesOptions &&
-              languagesOptions.map((i) => (
-                <option value={i.value}>{i.label}</option>
+            {LANGUAGE_OPTIONS &&
+              LANGUAGE_OPTIONS.map((i) => (
+                <option value={i.value} key={i.value}>
+                  {i.label}
+                </option>
               ))}
           </select>
         </div>
         <div className="mb-3">
-          <label htmlFor="level">Level</label>
+          <label className="form-label fw-bold" htmlFor="level">
+            Level
+          </label>
           <select
             className="form-select"
             name="level"
@@ -58,14 +68,18 @@ const QuizForm = () => {
             value={quiz.level}
             onChange={handleChange}
           >
-            {levelOptions[quiz.language] &&
-              levelOptions[quiz.language].map((i) => (
-                <option value={i}>{i}</option>
+            {LEVEL_OPTIONS[quiz.language] &&
+              LEVEL_OPTIONS[quiz.language].map((i) => (
+                <option value={i.value} key={i.value}>
+                  {i.label}
+                </option>
               ))}
           </select>
         </div>
         <div className="mb-3">
-          <label htmlFor="subLevel">Sub Level</label>
+          <label className="form-label fw-bold" htmlFor="subLevel">
+            Sub Level
+          </label>
           <select
             className="form-select"
             name="subLevel"
@@ -76,14 +90,16 @@ const QuizForm = () => {
           >
             {subLevelOptions &&
               subLevelOptions.map((x, i) => (
-                <option value={x} key={i}>
-                  {x}
+                <option value={x.value} key={x.value}>
+                  {x.label}
                 </option>
               ))}
           </select>
         </div>
         <div className="mb-3">
-          <label htmlFor="direction">Direction</label>
+          <label className="form-label fw-bold" htmlFor="direction">
+            Direction
+          </label>
           <select
             className="form-select"
             name="direction"
@@ -91,16 +107,20 @@ const QuizForm = () => {
             value={quiz.direction}
             onChange={handleChange}
           >
-            {directionOptions[quiz.language] &&
-              directionOptions[quiz.language].map((x) => (
-                <option value={x.value}>{x.label}</option>
+            {DIRECTION_OPTIONS[quiz.language] &&
+              DIRECTION_OPTIONS[quiz.language].map((x) => (
+                <option value={x.value} key={x.value}>
+                  {x.label}
+                </option>
               ))}
           </select>
         </div>
         <div className="mb-3">
-          <label htmlFor="format">Format</label>
+          <label className="form-label fw-bold" htmlFor="format">
+            Format
+          </label>
           <select
-            defaultValue="default"
+            // defaultValue="default"
             className="form-select"
             name="format"
             id="format"
@@ -108,14 +128,18 @@ const QuizForm = () => {
             onChange={handleChange}
           >
             <option value="default">Select a format</option>
-            {formatOptions &&
-              formatOptions.map((i) => (
-                <option value={i.value}>{i.label}</option>
+            {FORMAT_OPTIONS &&
+              FORMAT_OPTIONS.map((i) => (
+                <option value={i.value} key={i.value}>
+                  {i.label}
+                </option>
               ))}
           </select>
         </div>
         <div className="mb-3">
-          <label htmlFor="description">Description</label>
+          <label className="form-label fw-bold" htmlFor="description">
+            Description
+          </label>
           <input
             type="text"
             disabled
@@ -125,9 +149,9 @@ const QuizForm = () => {
             value={quiz.description}
           />
         </div>
-        {error && <p className="error">Can't generate questions</p>}
+        {error && <p className="error">Error: {error}</p>}
         <button
-          className="btn btn-primary start-btn"
+          className="btn btn-primary start-btn w-100"
           type="submit"
           onClick={handleSubmit}
         >
